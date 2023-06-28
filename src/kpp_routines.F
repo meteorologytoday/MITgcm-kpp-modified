@@ -39,7 +39,8 @@ c***********************************************************************
      I     , ikppkey
      O     , diffus
      U     , ghat
-     O     , hbl
+     I     , hbl_past
+     O     , hbl, hbl_tgt 
      I     , bi, bj, myTime, myIter, myThid )
 
 c-----------------------------------------------------------------------
@@ -126,7 +127,9 @@ c     hbl    (imt)    - mixing layer depth                                  (m)
 
       _RL diffus(imt,0:Nrp1,mdiff)
       _RL ghat  (imt,Nr)
+      _RL hbl_past(imt)
       _RL hbl   (imt)
+      _RL hbl_tgt (imt)
 
 #ifdef ALLOW_KPP
 
@@ -212,7 +215,8 @@ c-----------------------------------------------------------------------
 #endif /* ALLOW_SALT_PLUME */
      I     , coriol
      I     , ikppkey
-     O     , hbl, bfsfc, stable, casea, kbl, Rib, sigma
+     I     , hbl_past
+     O     , hbl, hbl_tgt , bfsfc, stable, casea, kbl, Rib, sigma
      I     , bi, bj, myTime, myIter, myThid )
 
 #ifdef ALLOW_AUTODIFF_TAMC
@@ -300,7 +304,8 @@ c*************************************************************************
 #endif /* ALLOW_SALT_PLUME */
      I     , coriol
      I     , ikppkey
-     O     , hbl, bfsfc, stable, casea, kbl, Rib, sigma
+     I     , hbl_past
+     O     , hbl, hbl_tgt, weight, bfsfc, stable, casea, kbl, Rib, sigma
      I     , bi, bj, myTime, myIter, myThid )
 
 c     the oceanic planetary boundary layer depth, hbl, is determined as
@@ -382,7 +387,9 @@ c casea     : =1 in case A, =0 in case B
 c kbl       : -1 of first grid level below hbl
 c Rib       : Bulk Richardson number
 c sigma     : normalized depth (d/hbl)
+      _RL hbl_past(imt)
       _RL hbl    (imt)
+      _RL hbl_tgt (imt)
       _RL bfsfc  (imt)
       _RL stable (imt)
       _RL casea  (imt)
@@ -611,11 +618,20 @@ CADJ &     shape = (/ (sNx+2*OLx)*(sNy+2*OLy) /)
 c     linearly interpolate to find hbl where Rib = Ricr
          IF (kl.GT.1 .AND. kl.LT.kmtj(i)) THEN
             tempVar1 = (Rib(i,kl)-Rib(i,kl-1))
-            hbl(i) = -zgrid(kl-1) + (zgrid(kl-1)-zgrid(kl)) *
+            hbl_tgt(i) = -zgrid(kl-1) + (zgrid(kl-1)-zgrid(kl)) *
      1           (Ricr - Rib(i,kl-1)) / tempVar1
 C     this is the MOM5 formulation, (nearly) identical results
 CML            hbl(i) = ((Rib(i,kl-1)-Ricr)*zgrid(kl) -
 CML     1           (Rib(i,kl)-Ricr)*zgrid(kl-1))/tempVar1
+
+
+C    Tien-Yiao's modification
+            IF (kpp_hbl_memory_time .GT. deltaTClock) THEN
+                hbl(i) = hbl_past(i) + deltaTClock / kpp_hbl_memory_time * 
+     1                  ( hbl_tgt(i) - hbl_past(i) )
+            ELSE
+                hbl(i) = hbl_tgt(i)
+            ENDIF
          ENDIF
       ENDDO
 
