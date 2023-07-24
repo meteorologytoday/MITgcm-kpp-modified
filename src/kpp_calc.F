@@ -609,8 +609,7 @@ c-----------------------------------------------------------------------
 #endif /* ALLOW_SHELFICE */
         KPPhbl(i,j,bi,bj) = hbl(i,j) * maskC(i,j,kSurf,bi,bj)
 C ==== KPP modified begin =====
-C        KPPhbl_tgt(i,j,bi,bj) = hbl_tgt(i,j) * maskC(i,j,kSurf,bi,bj)
-        KPPhbl_tgt(i,j,bi,bj) = 13.25
+        KPPhbl_tgt(i,j,bi,bj) = hbl_tgt(i,j) * maskC(i,j,kSurf,bi,bj)
 C ==== KPP modified end =====
        ENDDO
       ENDDO

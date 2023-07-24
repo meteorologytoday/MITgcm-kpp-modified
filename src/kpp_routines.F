@@ -624,7 +624,6 @@ C     this is the MOM5 formulation, (nearly) identical results
 CML            hbl(i) = ((Rib(i,kl-1)-Ricr)*zgrid(kl) -
 CML     1           (Rib(i,kl)-Ricr)*zgrid(kl-1))/tempVar1
 
-            hbl_tgt(i) = 27.35
 C   ======== KPP modification begin ========
             IF (kpp_hbl_memory_time .GT. deltaTClock) THEN
                 hbl(i) = hbl_past(i) 
