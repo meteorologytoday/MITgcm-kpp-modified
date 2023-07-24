@@ -618,13 +618,13 @@ CADJ &     shape = (/ (sNx+2*OLx)*(sNy+2*OLy) /)
 c     linearly interpolate to find hbl where Rib = Ricr
          IF (kl.GT.1 .AND. kl.LT.kmtj(i)) THEN
             tempVar1 = (Rib(i,kl)-Rib(i,kl-1))
+C   ======== KPP modification begin ========
             hbl_tgt(i) = -zgrid(kl-1) + (zgrid(kl-1)-zgrid(kl)) *
      1           (Ricr - Rib(i,kl-1)) / tempVar1
 C     this is the MOM5 formulation, (nearly) identical results
 CML            hbl(i) = ((Rib(i,kl-1)-Ricr)*zgrid(kl) -
 CML     1           (Rib(i,kl)-Ricr)*zgrid(kl-1))/tempVar1
 
-C   ======== KPP modification begin ========
             IF (kpp_hbl_memory_time .GT. deltaTClock) THEN
                 hbl(i) = hbl_past(i) 
      &              + ( deltaTClock / kpp_hbl_memory_time
