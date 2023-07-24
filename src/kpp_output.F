@@ -139,6 +139,9 @@ C         NOTE: file size and number problems are *SOLVED* by MNC
      &         myIter,myThid)
           CALL WRITE_REC_XY_RL('KPPhbl',KPPhbl,kpp_drctrec,
      &         myIter,myThid)
+          CALL WRITE_REC_XY_RL('KPPhbl',KPPhbl_tgt,kpp_drctrec,
+     &         myIter,myThid)
+
 C--     Increment record counter
           _BARRIER
           _BEGIN_MASTER( myThid )
@@ -164,6 +167,9 @@ C         NOTE: file size and number problems are *SOLVED* by MNC
      &         myIter,myThid)
           CALL WRITE_FLD_XY_RL('KPPhbl.',suff,KPPhbl,
      &         myIter,myThid)
+          CALL WRITE_FLD_XY_RL('KPPhbl_tgt.',suff,KPPhbl_tgt,
+     &         myIter,myThid)
+
 #endif /* MULTIPLE_RECORD_KPP_STATE_FILES */
         ENDIF
 
@@ -188,6 +194,9 @@ C         NOTE: file size and number problems are *SOLVED* by MNC
      &         'KPPGHAT', KPPghat, myThid)
           CALL MNC_CW_RL_W(pf,'kpp_state',0,0,
      &         'KPPHBL', KPPhbl, myThid)
+          CALL MNC_CW_RL_W(pf,'kpp_state',0,0,
+     &         'KPPHBL_TGT', KPPhbl_tgt, myThid)
+
         ENDIF
 #endif /*  ALLOW_MNC  */
 
@@ -209,6 +218,7 @@ C     Initialize averages to zero
             CALL TIMEAVE_RESET(KPPghatKStave, Nr,bi,bj,myThid)
             CALL TIMEAVE_RESET(KPPdiffKzStave,Nr,bi,bj,myThid)
             CALL TIMEAVE_RESET(KPPhbltave,    1, bi,bj,myThid)
+            CALL TIMEAVE_RESET(KPPhbl_tgttave,1, bi,bj,myThid)
             KPP_timeAve(bi,bj) = 0.
           ENDDO
         ENDDO
@@ -244,6 +254,9 @@ C     Time Average KPP fields
           ENDDO
           CALL TIMEAVE_CUMULATE(
      &         KPPhbltave,    KPPhbl,    1, DDTT,bi,bj,myThid)
+          CALL TIMEAVE_CUMULATE(
+     &         KPPhbl_tgttave, KPPhbl_tgt, 1, DDTT,bi,bj,myThid)
+
 C         Keep record of how much time has been integrated over
           KPP_timeAve(bi,bj) = KPP_timeAve(bi,bj)+DDTT
          ENDDO
@@ -297,6 +310,9 @@ C         NOTE: file size and number problems are *SOLVED* by MNC
      &         kpp_drctrecTave,myIter,myThid)
           CALL WRITE_REC_XY_RL('KPPhbl-T',KPPhbltave,
      &         kpp_drctrecTave,myIter,myThid)
+          CALL WRITE_REC_XY_RL('KPPhbl_tgt-T',KPPhbl_tgttave,
+     &         kpp_drctrecTave,myIter,myThid)
+
 C--       Increment record counter
           _BARRIER
           _BEGIN_MASTER( myThid )
@@ -322,6 +338,9 @@ C         NOTE: file size and number problems are *SOLVED* by MNC
      &         myIter,myThid)
           CALL WRITE_FLD_XY_RL('KPPhbl-T.',suff,KPPhbltave,
      &         myIter,myThid)
+          CALL WRITE_FLD_XY_RL('KPPhbl_tgt-T.',suff,KPPhbl_tgttave,
+     &         myIter,myThid)
+
 #endif /* MULTIPLE_RECORD_KPP_STATE_FILES */
         ENDIF
 
@@ -346,6 +365,8 @@ C         NOTE: file size and number problems are *SOLVED* by MNC
      &         'KPPghatKS', KPPghatKStave, myThid)
           CALL MNC_CW_RL_W(pf,'kpp_timeave',0,0,
      &         'KPPHBL', KPPhbltave, myThid)
+          CALL MNC_CW_RL_W(pf,'kpp_timeave',0,0,
+     &         'KPPHBL_TGT', KPPhbl_tgttave, myThid)
         ENDIF
 #endif /*  ALLOW_MNC  */
 
@@ -357,6 +378,7 @@ C       Reset averages to zero
             CALL TIMEAVE_RESET(KPPghatKStave, Nr,bi,bj,myThid)
             CALL TIMEAVE_RESET(KPPdiffKzStave,Nr,bi,bj,myThid)
             CALL TIMEAVE_RESET(KPPhbltave,    1, bi,bj,myThid)
+            CALL TIMEAVE_RESET(KPPhbl_tgttave,1, bi,bj,myThid)
             KPP_timeAve(bi,bj) = 0.
           ENDDO
         ENDDO
@@ -404,6 +426,7 @@ C     do not fill during call from INITIALISE_VARIA
         ENDDO
        ENDIF
        CALL DIAGNOSTICS_FILL(KPPhbl    ,'KPPhbl  ',0,1 ,0,1,1,myThid)
+       CALL DIAGNOSTICS_FILL(KPPhbl_tgt,'KPPhbltg',0,1 ,0,1,1,myThid)
        CALL DIAGNOSTICS_FILL(KPPfrac   ,'KPPfrac ',0,1 ,0,1,1,myThid)
 #ifdef ALLOW_SALT_PLUME
        CALL DIAGNOSTICS_FILL(KPPplumefrac,'KPPpfrac',0,1 ,0,1,1,myThid)
