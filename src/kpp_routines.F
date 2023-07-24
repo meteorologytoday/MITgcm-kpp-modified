@@ -128,7 +128,7 @@ c     hbl    (imt)    - mixing layer depth                                  (m)
       _RL diffus(imt,0:Nrp1,mdiff)
       _RL ghat  (imt,Nr)
       _RL hbl_past(imt)
-      _RL hbl   (imt)
+      _RL hbl     (imt)
       _RL hbl_tgt (imt)
 
 #ifdef ALLOW_KPP
@@ -305,7 +305,7 @@ c*************************************************************************
      I     , coriol
      I     , ikppkey
      I     , hbl_past
-     O     , hbl, hbl_tgt, weight, bfsfc, stable, casea, kbl, Rib, sigma
+     O     , hbl, hbl_tgt, bfsfc, stable, casea, kbl, Rib, sigma
      I     , bi, bj, myTime, myIter, myThid )
 
 c     the oceanic planetary boundary layer depth, hbl, is determined as
@@ -624,14 +624,16 @@ C     this is the MOM5 formulation, (nearly) identical results
 CML            hbl(i) = ((Rib(i,kl-1)-Ricr)*zgrid(kl) -
 CML     1           (Rib(i,kl)-Ricr)*zgrid(kl-1))/tempVar1
 
-
-C    Tien-Yiao's modification
+            hbl_tgt(i) = 27.35
+C   ======== KPP modification begin ========
             IF (kpp_hbl_memory_time .GT. deltaTClock) THEN
-                hbl(i) = hbl_past(i) + deltaTClock / kpp_hbl_memory_time * 
-     1                  ( hbl_tgt(i) - hbl_past(i) )
+                hbl(i) = hbl_past(i) 
+     &              + ( deltaTClock / kpp_hbl_memory_time
+     &                  * ( hbl_tgt(i) - hbl_past(i) ) )
             ELSE
                 hbl(i) = hbl_tgt(i)
             ENDIF
+C   ======== KPP modification end ========
          ENDIF
       ENDDO
 

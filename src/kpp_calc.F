@@ -194,9 +194,8 @@ c     kmtj   (nx,ny)       - maximum number of wet levels in each column
       _RL Ritop ( 1-OLx:sNx+OLx, 1-OLy:sNy+OLy, Nr            )
       _RL vddiff( 1-OLx:sNx+OLx, 1-OLy:sNy+OLy, 0:Nrp1, mdiff )
       _RL ghat  ( 1-OLx:sNx+OLx, 1-OLy:sNy+OLy, Nr            )
-      _RL hbl_past( 1-OLx:sNx+OLx, 1-OLy:sNy+OLy                )
       _RL hbl   ( 1-OLx:sNx+OLx, 1-OLy:sNy+OLy                )
-      _RL hbl_inst( 1-OLx:sNx+OLx, 1-OLy:sNy+OLy                )
+      _RL hbl_tgt( 1-OLx:sNx+OLx, 1-OLy:sNy+OLy              )
 cph(
       _RL TTALPHA( 1-OLx:sNx+OLx, 1-OLy:sNy+OLy, Nrp1 )
       _RL SSBETA ( 1-OLx:sNx+OLx, 1-OLy:sNy+OLy, Nrp1 )
@@ -551,6 +550,17 @@ C     and salt are not passed to kppmix and are thus not available there.
             work2(i,j) = Fcori(i,j,bi,bj)
          ENDDO
       ENDDO
+
+C ===== KPP modified begin =====
+       DO j = jMin, jMax
+        DO i = iMin, iMax
+         hbl(i,j) = 0.0
+         hbl_tgt(i,j) = 0.0
+        ENDDO
+       ENDDO
+C ===== KPP modified begin =====
+
+
       CALL KPPMIX (
      I       work1, shsq, dVsq, ustar
      I     , maskC(1-OLx,1-OLy,1,bi,bj)
@@ -568,7 +578,8 @@ C     and salt are not passed to kppmix and are thus not available there.
      O     , vddiff
      U     , ghat
      I     , KPPhbl(1-OLx,1-OLy,bi,bj)
-     O     , hbl, hbl_inst
+     O     , hbl
+     O     , hbl_tgt
      I     , bi, bj, myTime, myIter, myThid )
 
 c-----------------------------------------------------------------------
@@ -597,6 +608,10 @@ c-----------------------------------------------------------------------
         IF ( useShelfIce ) kSurf = MAX(1,kTopC(i,j,bi,bj))
 #endif /* ALLOW_SHELFICE */
         KPPhbl(i,j,bi,bj) = hbl(i,j) * maskC(i,j,kSurf,bi,bj)
+C ==== KPP modified begin =====
+C        KPPhbl_tgt(i,j,bi,bj) = hbl_tgt(i,j) * maskC(i,j,kSurf,bi,bj)
+        KPPhbl_tgt(i,j,bi,bj) = 13.25
+C ==== KPP modified end =====
        ENDDO
       ENDDO
 

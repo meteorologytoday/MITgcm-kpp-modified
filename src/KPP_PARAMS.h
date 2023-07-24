@@ -46,7 +46,8 @@ c     _RL pMask     ( 1-OLx:sNx+OLx, 1-OLy:sNy+OLy, Nr, nSx, nSy )
 
       COMMON /kpp_r1/ zgrid, hwide
 
-      COMMON /kpp_r2/ kpp_freq, kpp_dumpFreq, kpp_taveFreq, kpp_hbl_memory_time
+      COMMON /kpp_r2/ kpp_freq, kpp_dumpFreq, kpp_taveFreq, 
+     &                kpp_hbl_memory_time
 
 C-----------------------------------------------------------------------
 C

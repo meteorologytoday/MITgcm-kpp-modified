@@ -32,8 +32,9 @@ CEOP
       _RL KPPhbl     (1-OLx:sNx+OLx,1-OLy:sNy+OLy,   nSx,nSy)
       _RL KPPhbl_tgt (1-OLx:sNx+OLx,1-OLy:sNy+OLy,   nSx,nSy)
       _RL KPPfrac    (1-OLx:sNx+OLx,1-OLy:sNy+OLy,   nSx,nSy)
-      COMMON /kpp/ KPPviscAz, KPPdiffKzT, KPPdiffKzS
-     &              , KPPghat, KPPhbl, KPPhbl_tgt 
+      COMMON /kpp/ KPPviscAz, KPPdiffKzT, KPPdiffKzS,
+     &             KPPghat, 
+     &             KPPhbl, KPPhbl_tgt
 #ifdef ALLOW_SALT_PLUME
       _RL KPPplumefrac(1-OLx:sNx+OLx,1-OLy:sNy+OLy,   nSx,nSy)
       COMMON /kpp_short1/ KPPplumefrac
