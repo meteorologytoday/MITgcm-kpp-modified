@@ -568,6 +568,7 @@ C ===== KPP modified begin =====
      I     , ikppkey
      O     , vddiff
      U     , ghat
+     I     , KPPhbl(1-OLx,1-OLy,bi,bj)
      O     , hbl
      O     , hbl_tgt
      I     , bi, bj, myTime, myIter, myThid )
@@ -595,7 +596,7 @@ c-----------------------------------------------------------------------
 #endif /* ALLOW_SHELFICE */
         KPPhbl(i,j,bi,bj) = hbl(i,j) * maskC(i,j,k,bi,bj)
 C ==== KPP modified begin =====
-        KPPhbl_tgt(i,j,bi,bj) = hbl_tgt(i,j) * maskC(i,j,kSurf,bi,bj)
+        KPPhbl_tgt(i,j,bi,bj) = hbl_tgt(i,j) * maskC(i,j,k,bi,bj)
 C ==== KPP modified end =====
        ENDDO
       ENDDO

@@ -127,6 +127,7 @@ c     hbl    (imt)    - mixing layer depth                                  (m)
 
       _RL diffus(imt,0:Nrp1,mdiff)
       _RL ghat  (imt,Nr)
+      _RL hbl_past(imt)
       _RL hbl   (imt)
       _RL hbl_tgt (imt)
 
@@ -202,7 +203,6 @@ c compute boundary layer mixing coefficients:
 c
 c diagnose the new boundary layer depth
 c-----------------------------------------------------------------------
-
       call bldepth (
      I       kmtj
      I     , dvsq, dbloc, Ritop, ustar, bo, bosol
@@ -217,7 +217,6 @@ c-----------------------------------------------------------------------
      I     , hbl_past
      O     , hbl, hbl_tgt, bfsfc, stable, casea, kbl, Rib, sigma
      I     , bi, bj, myTime, myIter, myThid )
-
 #ifdef ALLOW_AUTODIFF_TAMC
 CADJ STORE hbl,bfsfc,stable,casea,kbl = comlev1_kpp,
 CADJ &     key=ikppkey, kind=isbyte
@@ -303,7 +302,8 @@ c*************************************************************************
 #endif /* ALLOW_SALT_PLUME */
      I     , coriol
      I     , ikppkey
-     O     , hbl, bfsfc, stable, casea, kbl, Rib, sigma
+     I     , hbl_past
+     O     , hbl, hbl_tgt, bfsfc, stable, casea, kbl, Rib, sigma
      I     , bi, bj, myTime, myIter, myThid )
 
 c     the oceanic planetary boundary layer depth, hbl, is determined as
