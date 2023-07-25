@@ -132,7 +132,7 @@ C ===== KPP modified end =====
 C--  Check parameters:
 
 C ===== KPP modified begin =====
-      IF (kpp_hbl_memory_time .LE. 0) THEN
+      IF (kpp_hbl_memory_time .LT. 0) THEN
          WRITE(msgBuf,'(A)') 'kpp_hbl_memory_time cannot be negative'
          CALL PRINT_ERROR( msgBuf , myThid )
          STOP 'ABNORMAL END: S/R KPP_CHECK'
@@ -140,7 +140,7 @@ C ===== KPP modified begin =====
 
       IF (kpp_hbl_memory_time .LE. deltaTClock) THEN
          WRITE(msgBuf,'(A)') 'kpp_hbl_memory_time is shorter than
-     &deltaTClock, will be counted as no-memory (traditional setup)'
+     & deltaTClock, will be counted as no-memory (traditional setup)'
           CALL PRINT_MESSAGE( msgBuf, standardMessageUnit,
      &                    SQUEEZE_RIGHT, myThid )
       ENDIF
