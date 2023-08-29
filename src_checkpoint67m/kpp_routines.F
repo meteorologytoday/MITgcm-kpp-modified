@@ -618,7 +618,8 @@ C   ======== KPP modification begin ========
             hbl_tgt(i) = -zgrid(kl-1) + (zgrid(kl-1)-zgrid(kl)) *
      1           (Ricr - Rib(i,kl-1)) / tempVar1
 
-            IF (kpp_hbl_memory_time .GT. deltaTClock) THEN
+            IF ( ( kpp_hbl_memory_time .GT. deltaTClock ) 
+     &           .AND. ( myTime .GE. kpp_damping_spinup_time ) ) THEN
                 hbl(i) = hbl_past(i) 
      &              + ( deltaTClock / kpp_hbl_memory_time
      &                  * ( hbl_tgt(i) - hbl_past(i) ) )

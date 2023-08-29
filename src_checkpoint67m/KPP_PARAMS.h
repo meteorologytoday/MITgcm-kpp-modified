@@ -41,13 +41,15 @@ c     _RL pMask     ( 1-OLx:sNx+OLx, 1-OLy:sNy+OLy, Nr, nSx, nSy )
       _RL kpp_dumpFreq
       _RL kpp_taveFreq
       _RL kpp_hbl_memory_time
+      _RL kpp_damping_spinup_time
 
       COMMON /kpp_i/  nzmax
 
       COMMON /kpp_r1/ zgrid, hwide
 
       COMMON /kpp_r2/ kpp_freq, kpp_dumpFreq, kpp_taveFreq, 
-     &                kpp_hbl_memory_time
+     &                kpp_hbl_memory_time, 
+     &                kpp_damping_spinup_time
 
 C-----------------------------------------------------------------------
 C

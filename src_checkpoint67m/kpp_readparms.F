@@ -52,7 +52,7 @@ C--   KPP vertical mixing parameters
      & cstar,
      & KPPmixingMaps,
      & num_v_smooth_BV, num_z_smooth_sh, num_m_smooth_sh,
-     & kpp_hbl_memory_time
+     & kpp_hbl_memory_time, kpp_damping_spinup_time
 
 C---+----1----+----2----+----3----+----4----+----5----+----6----+----7-|--+----|
 
@@ -87,6 +87,7 @@ C--   set default KPP vertical mixing parameters
       KPP_ghatUseTotalDiffus = .FALSE.
       minKPPhbl = UNSET_RL
       kpp_hbl_memory_time = 0.0
+      kpp_damping_spinup_time = 0.0
 C-----------------------------------------------------------------------
 C define some non-dimensional constants and
 C the vertical mixing coefficients in m-k-s units
