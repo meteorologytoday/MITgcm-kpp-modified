@@ -376,6 +376,10 @@ c coriol    : Coriolis parameter                        (1/s)
 #endif /* SALT_PLUME_SPLIT_BASIN */
 #endif /* ALLOW_SALT_PLUME */
 
+c------ Tien-Yiao's Modification Begin ------
+      _RL tmp
+c------ Tien-Yiao's Modification End   ------
+
 c  output
 c--------
 c hbl       : boundary layer depth                        (m)
@@ -726,7 +730,27 @@ c-----------------------------------------------------------------------
      &           / vonk / bfsfc(i)
             hlimit = stable(i) * min(hekman,hmonob)
      &             + (stable(i)-1.) * zgrid(Nr)
-            hbl(i) = min(hbl(i),hlimit)
+
+c-------------------------------
+c Tien-Yiao's Modification Begin
+c-------------------------------
+c            hbl(i) = min(hbl(i),hlimit)
+
+            tmp = min(hbl(i),hlimit)
+            IF ( hbl(i) .NE. tmp ) THEN
+                hbl_tgt(i) = tmp
+                IF ( ( kpp_hbl_memory_time .GT. deltaTClock ) 
+     &               .AND. ( myTime .GE. kpp_damping_spinup_time ) ) THEN
+                    hbl(i) = hbl_past(i) 
+     &                  + ( deltaTClock / kpp_hbl_memory_time
+     &                      * ( hbl_tgt(i) - hbl_past(i) ) )
+                ELSE
+                    hbl(i) = hbl_tgt(i)
+                ENDIF
+            ENDIF
+c-------------------------------
+c Tien-Yiao's Modification End
+c-------------------------------
          end if
       end do
       ENDIF
